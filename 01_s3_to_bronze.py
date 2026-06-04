@@ -5,10 +5,12 @@ checkpoint_path = "s3://databricks-sample-bucket-20260602/car_factory_dev/checkp
 database_bronze_path = "s3://databricks-sample-bucket-20260602/car_factory_dev/database/bronze/"
 
 
+
 bronze_stream = (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "csv")
     .option("cloudFiles.inferColumnTypes", "true")
+    .option("cloudFiles.schemaLocation", checkpoint_path + "/bronze")
     .option("header", "true")
     .load(s3_source_path))
 
