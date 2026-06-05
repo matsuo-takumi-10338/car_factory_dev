@@ -9,15 +9,15 @@ class EnvConfig:
     def get_env_params(self, param):
 
         if param == "s3_source_path":
-            s3_source_path = f"s3://{self.s3_bucket}/{self.project_dir}/raw/"
+            s3_source_path = f"s3://{self.s3_bucket}/{self.project_dir}_{self.env}/raw/"
             return s3_source_path
         
         if param == "schema_location":
-            schema_location = f"s3://{self.s3_bucket}/{self.project_dir}/checkpoints/{self.layer}/_schema_metadata"
+            schema_location = f"s3://{self.s3_bucket}/{self.project_dir}_{self.env}/checkpoints/{self.layer}/_schema_metadata"
             return schema_location
         
         if param == "checkpoint_location":
-            checkpoint_location = f"s3://{self.s3_bucket}/{self.project_dir}/checkpoints/{self.layer}"
+            checkpoint_location = f"s3://{self.s3_bucket}/{self.project_dir}_{self.env}/checkpoints/{self.layer}"
             return checkpoint_location
         
         if param == "table_name":
