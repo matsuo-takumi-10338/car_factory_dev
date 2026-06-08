@@ -1,10 +1,20 @@
+from databricks.sdk.runtime import dbutils
+import os
+
 class EnvParams:
     
     def __init__(self, layer="bronze"):
         self.layer = layer
-        self.env = dbutils.widgets.get("env")
-        self.s3_bucket = dbutils.widgets.get("s3_bucket")
-        self.project_dir = dbutils.widgets.get("project_dir")
+
+        current_path = os.getcwd()
+        if "_prod" in current_path:
+            self.env = "prod"
+        else:
+            self.env = "dev"
+
+        scope_name = f"car_factory_secrets_{self.env}"
+        self.s3_bucket = dbutils.secrets.get(scope=scope_name, key="s3_bucket")
+        self.project_dir = dbutils.secrets.get(scope = scope_name, key = "project_dir")
 
     def get_path(self, param):
 

@@ -1,0 +1,17 @@
+resources:
+  jobs:
+    car_factory_ingestion_pipeline:
+      name: "car_factory_ingestion_pipeline_${bundle.target}"
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: s3://databricks-sample-bucket-20260602/car_factory_${bundle.target}/raw/
+      tasks:
+        - task_key: s3_to_bronze
+          spark_python_task:
+            python_file: /Workspace/Shared/car_factory_${bundle.target}/src/01_s3_to_bronze.py
+          environment_key: Default
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "5"
