@@ -3,7 +3,7 @@ import os
 
 class EnvParams:
     
-    def __init__(self, layer="bronze"):
+    def __init__(self, domain, layer):
         self.layer = layer
 
         current_path = os.getcwd()
@@ -12,7 +12,12 @@ class EnvParams:
         else:
             self.env = "dev"
 
-        scope_name = f"car_factory_secrets_{self.env}"
+        if domain == "mom_factory":
+            self.domain = "mom_factory"
+        else:
+            self.domain = "engineering"
+
+        scope_name = f"cf_{self.domain}_secrets_{self.env}"
         self.s3_bucket = dbutils.secrets.get(scope=scope_name, key="s3_bucket")
         self.project_dir = dbutils.secrets.get(scope = scope_name, key = "project_dir")
 
