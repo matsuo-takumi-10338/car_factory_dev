@@ -18,30 +18,41 @@ class EnvParams:
             self.domain = "engineering"
 
         scope_name = f"cf_{self.domain}_secrets_{self.env}"
+
         self.s3_bucket = dbutils.secrets.get(scope=scope_name, key="s3_bucket")
         self.project_dir = dbutils.secrets.get(scope = scope_name, key = "project_dir")
 
     def get_path(self, param):
 
         if param == "s3_source_path":
-            s3_source_path = f"s3://{self.s3_bucket}/{self.project_dir}_{self.env}/raw/"
-            return s3_source_path
+            if self.domain == "mom_factory":
+                return f"s3://{self.s3_bucket}/raw/"
+            else:
+                return f"s3://{self.s3_bucket}/raw/production_standard/"
         
         if param == "schema_location":
-            schema_location = f"s3://{self.s3_bucket}/{self.project_dir}_{self.env}/checkpoints/{self.layer}/_schema_metadata"
-            return schema_location
+            if self.domain == "mom_factory":
+                return f"s3://{self.s3_bucket}/checkpoints/{self.layer}/_schema_metadata"
+            else:
+                return f"s3://{self.s3_bucket}/checkpoints/production_standard/_schema_metadata"
         
         if param == "checkpoint_location":
-            checkpoint_location = f"s3://{self.s3_bucket}/{self.project_dir}_{self.env}/checkpoints/{self.layer}"
-            return checkpoint_location
+            if self.domain == "mom_factory":
+                return f"s3://{self.s3_bucket}/checkpoints/{self.layer}/"
+            else:
+                return f"s3://{self.s3_bucket}/checkpoints/production_standard/"
         
         if param == "table_name":
-            table_name = f"car_factory_{self.env}.{self.layer}.car_factory_{self.layer}"
-            return table_name
+            if self.domain == "mom_factory":
+                return f"cf_{self.env}.{self.layer}.{self.layer}_mom_factory"
+            else:
+                return f"cf_{self.env}.{self.layer}.{self.layer}_engineering"
 
         if param == "data_path":
-            data_path = f"s3://{self.s3_bucket}/car_factory_{self.env}/database/{self.layer}/car_factory_{self.layer}"
-            return data_path
+            if self.domain == "mom_factory":
+                return f"s3://{self.s3_bucket}/database/{self.layer}/"
+            else:
+                return f"s3://{self.s3_bucket}/database/production_standard/"
         
         return None
     
