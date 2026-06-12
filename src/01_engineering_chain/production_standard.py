@@ -19,6 +19,7 @@ raw_df = (
 bronze_df = (raw_df
     .withColumn("_input_file_path", F.col("_metadata.file_path"))      
     .withColumn("_processed_timestamp", F.current_timestamp()) 
+    .filter(~F.col("_metadata.file_path").contains("_rescued_data"))
 )
 
 # 書き込み側
