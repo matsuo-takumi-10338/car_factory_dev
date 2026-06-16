@@ -4,13 +4,10 @@ from src.modules.env_params import EnvParams
 
 
 env_params = EnvParams(domain="mom_factory", layer="bronze")
-table_name = "cf_mom_factory_dev.bronze.bronze_mom_factory"
-
-spark.conf.set("pipelines.metastore.checkpoint.bronze", env_params.get_path("checkpoint_location"))      
-
+brz_table_name = f"cf_mom_factory_{env_params.env}.bronze.brz_mom_factory"
 
 @dlt.table(
-    name=table_name,
+    name=brz_table_name,
     comment="ブロンズ-車両製造実績"
 )
 def brz_mom_factory():

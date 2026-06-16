@@ -15,4 +15,6 @@ resources:
         - environment_key: Default
           spec:
             environment_version: "5"
-            
+      permissions:
+        - group_name: "users"
+          level: CAN_VIEW
