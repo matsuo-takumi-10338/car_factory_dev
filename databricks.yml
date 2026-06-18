@@ -7,8 +7,6 @@ include:
 sync:
   paths:
     - .
-  include:
-    - "src/**"
 
 targets:
   dev:

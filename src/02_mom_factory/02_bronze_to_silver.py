@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
 import dlt
 from pyspark.sql import functions as F
 from pyspark.sql.types import DoubleType, IntegerType, BooleanType
