@@ -1,0 +1,11 @@
+resources:
+  external_locations:
+    cf_mom_factory_location:
+      name: "cf_mom_factory_external_location" 
+      url: "s3://cf-mom-factory-bucket-dev/"
+      credential_name: "cf_mom_factory_external_location_awsiamrole_1780990768100"
+
+    cf_engineering_location:
+      name: "cf_engineering_external_location"
+      url: "s3://cf-engineering-bucket-dev/"
+      credential_name: "cf_engineering_external_location_awsiamrole_1781078745862"
