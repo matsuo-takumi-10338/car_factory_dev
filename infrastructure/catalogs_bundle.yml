@@ -1,34 +1,34 @@
-# resources:
-#   catalogs:
-#     cf_mom_factory:
-#       name: "cf_mom_factory_${bundle.target}"
-#       storage_root: "s3://cf-mom-factory-bucket-dev/mom_factory_dev/database"
-#       grants:
-#         - principal: "users"
-#           privileges:
-#             - ALL_PRIVILEGES
+resources:
+  catalogs:
+    cf_mom_factory:
+      name: "cf_mom_factory_${bundle.target}"
+      storage_root: "s3://cf-mom-factory-bucket-dev/mom_factory_dev/database"
+      grants:
+        - principal: "users"
+          privileges:
+            - ALL_PRIVILEGES
 
-#     cf_engineering:
-#       name: "cf_engineering_${bundle.target}"
-#       storage_root: "s3://cf-engineering-bucket-dev/engineering_dev/database"
-#       grants:
-#         - principal: "users"
-#           privileges:
-#             - ALL_PRIVILEGES
+    cf_engineering:
+      name: "cf_engineering_${bundle.target}"
+      storage_root: "s3://cf-engineering-bucket-dev/engineering_dev/database"
+      grants:
+        - principal: "users"
+          privileges:
+            - ALL_PRIVILEGES
 
-#   schemas:
-#     bronze_schema_mom:
-#       name: "bronze"
-#       catalog_name: "cf_mom_factory_${bundle.target}"    
-#     silver_schema_mom:
-#       name: "silver"
-#       catalog_name: "cf_mom_factory_${bundle.target}"
-#     gold_schema_mom:
-#       name: "gold"
-#       catalog_name: "cf_mom_factory_${bundle.target}"
-#     master_schema_mom:
-#       name: "master"
-#       catalog_name: "cf_mom_factory_${bundle.target}"
-#     master_schema_eng:
-#       name: "master"
-#       catalog_name: "cf_engineering_${bundle.target}"
+  schemas:
+    bronze_schema_mom:
+      name: "bronze"
+      catalog_name: "cf_mom_factory_${bundle.target}"    
+    silver_schema_mom:
+      name: "silver"
+      catalog_name: "cf_mom_factory_${bundle.target}"
+    gold_schema_mom:
+      name: "gold"
+      catalog_name: "cf_mom_factory_${bundle.target}"
+    master_schema_mom:
+      name: "master"
+      catalog_name: "cf_mom_factory_${bundle.target}"
+    master_schema_eng:
+      name: "master"
+      catalog_name: "cf_engineering_${bundle.target}"
