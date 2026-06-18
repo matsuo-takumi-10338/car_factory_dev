@@ -3,12 +3,10 @@ resources:
     cf_mom_factory:
       name: "cf_mom_factory_${bundle.target}"
       storage_root: "s3://cf-mom-factory-bucket-dev/mom_factory_dev/database"
-      grants:
 
     cf_engineering:
       name: "cf_engineering_${bundle.target}"
       storage_root: "s3://cf-engineering-bucket-dev/engineering_dev/database"
-      grants:
 
   schemas:
     bronze_schema_mom:

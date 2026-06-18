@@ -3,6 +3,7 @@ bundle:
 
 include:
   - infrastructure/*.yml
+  - "src/**"
 
 sync:
   paths:
