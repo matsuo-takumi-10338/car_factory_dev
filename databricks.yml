@@ -3,11 +3,12 @@ bundle:
 
 include:
   - infrastructure/*.yml
-  - "src/**"
 
 sync:
   paths:
     - .
+  include:
+    - "src/**"
 
 targets:
   dev:
