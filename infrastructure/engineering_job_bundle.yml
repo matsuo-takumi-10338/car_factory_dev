@@ -11,6 +11,10 @@ resources:
           spark_python_task:
             python_file: /Workspace/Shared/cf_${bundle.target}/src/01_engineering_chain/production_standard.py
           environment_key: Default
+        - task_key: s3_to_master_sp
+          spark_python_task:
+            python_file: /Workspace/Shared/cf_${bundle.target}/src/01_engineering_chain/production_standard_sp.py
+          environment_key: Default
       environments:
         - environment_key: Default
           spec:

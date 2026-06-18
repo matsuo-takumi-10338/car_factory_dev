@@ -1,0 +1,17 @@
+resources:
+  jobs:
+    cf_mom_factory_job_dev:
+      name: cf-mom-factory-job-dev-test
+      trigger:
+        file_arrival:
+          url: s3://cf-mom-factory-bucket-dev/mom_factory_dev/raw/
+      tasks:
+        - task_key: cf_mom_factory_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.cf_mom_factory_pipeline_dev.id}
+      queue:
+        enabled: true
+      permissions:
+        - group_name: "users"
+          level: CAN_VIEW
+        
