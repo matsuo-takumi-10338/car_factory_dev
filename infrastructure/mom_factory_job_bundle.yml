@@ -1,7 +1,7 @@
 resources:
   jobs:
     cf_mom_factory_job_dev:
-      name: cf-mom-factory-job-dev-test
+      name: cf-mom-factory-job-${bundle.target}-test
       trigger:
         file_arrival:
           url: s3://cf-mom-factory-bucket-dev/mom_factory_dev/raw/

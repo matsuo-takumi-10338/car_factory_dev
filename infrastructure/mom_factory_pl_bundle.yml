@@ -1,23 +1,25 @@
 resources:
   pipelines:
     cf_mom_factory_pipeline_dev:
-      name: cf-mom-factory-pipeline-dev-test
+      name: cf-mom-factory-pipeline-${bundle.target}-test
       development: false
       continuous: false
       channel: CURRENT
       photon: true
       serverless: true
-      catalog: cf_mom_factory_dev
+      catalog: cf_mom_factory_${bundle.target}
       schema: default
+      depends_on:
+        - cf_mom_factory_${bundle.target}
       libraries:
         - file:
-            path: /Workspace/Shared/cf_dev/src/02_mom_factory/01_s3_to_bronze.py
+            path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/01_s3_to_bronze.py
         - file:
-            path: /Workspace/Shared/cf_dev/src/02_mom_factory/02_bronze_to_silver.py
+            path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/02_bronze_to_silver.py
         - file:
-            path: /Workspace/Shared/cf_dev/src/02_mom_factory/03_silver_to_gold.py
+            path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/03_silver_to_gold.py
       configuration:
-        root_path: /Workspace/Shared/cf_dev/src/02_mom_factory
+        root_path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory
       permissions:
         - group_name: "users"
           level: CAN_VIEW
