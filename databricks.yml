@@ -14,4 +14,5 @@ targets:
   
   prod:
     workspace:
+      root_path: /Shared/cf_prod/${bundle.name}
       host: 
