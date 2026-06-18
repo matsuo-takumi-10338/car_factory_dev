@@ -6,7 +6,7 @@ include:
 
 sync:
   paths:
-    - src
+    - .
 
 targets:
   dev:
@@ -18,5 +18,5 @@ targets:
   
   prod:
     workspace:
-      root_path: /Shared/cf_prod/${bundle.name}
+      root_path: /Shared/cf_prod
       host: https://dbc-1e983d4b-9b08.cloud.databricks.com
