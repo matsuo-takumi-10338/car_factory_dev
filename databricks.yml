@@ -4,6 +4,10 @@ bundle:
 include:
   - infrastructure/*.yml
 
+sync:
+  paths:
+    - src
+
 targets:
   dev:
     default: true
