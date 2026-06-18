@@ -12,6 +12,7 @@ targets:
   dev:
     default: true
     workspace:
+      root_path: /Shared/cf_dev
       host: https://dbc-599d6b62-77ee.cloud.databricks.com
     # mode: production
     # mode: development

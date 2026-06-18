@@ -1,7 +1,7 @@
 resources:
   pipelines:
-    cf_mom_factory_pipeline_dev:
-      name: cf-mom-factory-pipeline-${bundle.target}-test
+    cf_mom_factory_pipeline:
+      name: cf-mom-factory-pipeline-${bundle.target}
       development: false
       continuous: false
       channel: CURRENT
@@ -11,13 +11,13 @@ resources:
       schema: default
       libraries:
         - file:
-            path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/01_s3_to_bronze.py
+            path: ${workspace.file_path}/src/02_mom_factory/01_s3_to_bronze.py
         - file:
-            path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/02_bronze_to_silver.py
+            path: ${workspace.file_path}/src/02_mom_factory/02_bronze_to_silver.py
         - file:
-            path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/03_silver_to_gold.py
+            path: ${workspace.file_path}/src/02_mom_factory/03_silver_to_gold.py
       configuration:
-        root_path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory
+        root_path: ${workspace.file_path}/src/02_mom_factory
       permissions:
-        - group_name: "users"
+        - group_name: users
           level: CAN_VIEW

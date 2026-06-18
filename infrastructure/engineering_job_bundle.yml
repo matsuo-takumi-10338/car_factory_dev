@@ -1,7 +1,7 @@
 resources:
   jobs:
     cf-engineering-job:
-      name: "cf-engineering-job-${bundle.target}"
+      name: cf-engineering-job-${bundle.target}
       trigger:
         pause_status: UNPAUSED
         file_arrival:
@@ -9,16 +9,16 @@ resources:
       tasks:
         - task_key: s3_to_master
           spark_python_task:
-            python_file: /Workspace/Shared/cf_${bundle.target}/src/01_engineering_chain/production_standard.py
+            python_file: ${workspace.file_path}/src/01_engineering_chain/production_standard.py
           environment_key: Default
         - task_key: s3_to_master_sp
           spark_python_task:
-            python_file: /Workspace/Shared/cf_${bundle.target}/src/01_engineering_chain/production_standard_sp.py
+            python_file: ${workspace.file_path}/src/01_engineering_chain/production_standard_sp.py
           environment_key: Default
       environments:
         - environment_key: Default
           spec:
             environment_version: "5"
       permissions:
-        - group_name: "users"
+        - group_name: users
           level: CAN_VIEW
