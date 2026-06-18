@@ -9,8 +9,6 @@ resources:
       serverless: true
       catalog: cf_mom_factory_${bundle.target}
       schema: default
-      depends_on:
-        - cf_mom_factory_${bundle.target}
       libraries:
         - file:
             path: /Workspace/Shared/cf_${bundle.target}/src/02_mom_factory/01_s3_to_bronze.py
