@@ -7,7 +7,7 @@ resources:
           notebook_task:
             notebook_path: ${workspace.file_path}/src/01_engineering_chain/sql_procedures/sp_merge_upsert.dbquery.ipynb
             base_parameters:
-              catalog_name: cf_engineering_${bundle.target}
+              catalog_name: ${var.eng_catalog_name}
     cf-engineering-job:
       name: cf-engineering-job-${bundle.target}
       trigger:
@@ -18,10 +18,16 @@ resources:
         - task_key: s3_to_master
           spark_python_task:
             python_file: ${workspace.file_path}/src/01_engineering_chain/production_standard.py
+            parameters:
+              - ${var.eng_catalog_name}
+              - ${workspace.file_path}/files
           environment_key: Default
         - task_key: s3_to_master_sp
           spark_python_task:
             python_file: ${workspace.file_path}/src/01_engineering_chain/production_standard_sp.py
+            parameters:
+              - ${var.eng_catalog_name}
+              - ${workspace.file_path}/files
           environment_key: Default
       environments:
         - environment_key: Default

@@ -1,26 +1,26 @@
 resources:
   catalogs:
     cf_mom_factory:
-      name: "cf_mom_factory_${bundle.target}"
-      storage_root: "s3://cf-mom-factory-bucket-dev/mom_factory_dev/database"
+      name: ${var.mom_catalog_name}
+      storage_root: s3://cf-mom-factory-bucket-dev/mom_factory_dev/database/${var.mom_catalog_name}
 
     cf_engineering:
-      name: "cf_engineering_${bundle.target}"
-      storage_root: "s3://cf-engineering-bucket-dev/engineering_dev/database"
+      name: ${var.eng_catalog_name}
+      storage_root: s3://cf-engineering-bucket-dev/engineering_dev/database/${var.eng_catalog_name}
 
   schemas:
     bronze_schema_mom:
-      name: "bronze"
-      catalog_name: "cf_mom_factory_${bundle.target}"    
+      name: bronze
+      catalog_name: ${var.mom_catalog_name}    
     silver_schema_mom:
-      name: "silver"
-      catalog_name: "cf_mom_factory_${bundle.target}"
+      name: silver
+      catalog_name: ${var.mom_catalog_name}
     gold_schema_mom:
-      name: "gold"
-      catalog_name: "cf_mom_factory_${bundle.target}"
+      name: gold
+      catalog_name: ${var.mom_catalog_name}
     master_schema_mom:
-      name: "master"
-      catalog_name: "cf_mom_factory_${bundle.target}"
+      name: master
+      catalog_name: ${var.mom_catalog_name}
     master_schema_eng:
-      name: "master"
-      catalog_name: "cf_engineering_${bundle.target}"
+      name: master
+      catalog_name: ${var.eng_catalog_name}

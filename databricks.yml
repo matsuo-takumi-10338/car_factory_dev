@@ -10,7 +10,13 @@ sync:
 
 variables:
   sql_warehouse_id:
-    description: "SQL Warehouse ID"
+    description: SQL Warehouse ID
+  eng_catalog_name:
+    description: Unity Catalog Name for Engineering
+    default: cf_engineering_${bundle.target}_${workspace.current_user.short_name}
+  mom_catalog_name:
+    description: Unity Catalog Name for Mom Factory
+    default: cf_mom_factory_${bundle.target}_${workspace.current_user.short_name}
 
 targets:
   dev:
@@ -19,7 +25,7 @@ targets:
       host: https://dbc-599d6b62-77ee.cloud.databricks.com
     mode: development
     variables:
-      sql_warehouse_id: "229175630612965c"
+      sql_warehouse_id: 229175630612965c
   
   dev_shared:
     workspace:
@@ -27,7 +33,9 @@ targets:
       host: https://dbc-599d6b62-77ee.cloud.databricks.com
     mode: production
     variables:
-      sql_warehouse_id: "229175630612965c"
+      sql_warehouse_id: 229175630612965c
+      mom_catalog_name: cf_mom_factory_dev
+      eng_catalog_name: cf_engineering_dev
   
   prod:
     workspace:
@@ -35,4 +43,6 @@ targets:
       host: https://dbc-1e983d4b-9b08.cloud.databricks.com
     mode: production
     variables:
-      sql_warehouse_id: "prod環境のウェアハウスID（例: 1234567890abcdef）"
+      sql_warehouse_id: xxxxxxxxxxxxxxxxxxx
+      mom_catalog_name: cf_mom_factory_prod
+      eng_catalog_name: cf_engineering_prod

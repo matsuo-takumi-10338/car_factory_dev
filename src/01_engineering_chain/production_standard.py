@@ -1,6 +1,6 @@
 import sys
 
-sys.path.insert(0, "/Workspace/Shared/cf_app/files")
+sys.path.insert(0, sys.argv[2])
 
 from src.modules.env_params import EnvParams
 from pyspark.sql import functions as F
@@ -8,7 +8,7 @@ from pyspark.sql.types import DoubleType
 from delta.tables import DeltaTable
 
 env_params = EnvParams(domain="engineering", layer="production_standard")
-table_name = f"cf_engineering_{env_params.env}.master.m_production_standard"
+table_name = f"{env_params.catalog_name}.master.m_production_standard"
 
 # 1. 読み込み側
 raw_df = (
