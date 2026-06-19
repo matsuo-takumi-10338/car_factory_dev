@@ -8,16 +8,31 @@ sync:
   paths:
     - .
 
+variables:
+  sql_warehouse_id:
+    description: "SQL Warehouse ID"
+
 targets:
   dev:
     default: true
     workspace:
-      root_path: /Shared/cf_dev
       host: https://dbc-599d6b62-77ee.cloud.databricks.com
-    # mode: production
-    # mode: development
+    mode: development
+    variables:
+      sql_warehouse_id: "229175630612965c"
+  
+  dev_shared:
+    workspace:
+      root_path: /Shared/cf_app
+      host: https://dbc-599d6b62-77ee.cloud.databricks.com
+    mode: production
+    variables:
+      sql_warehouse_id: "229175630612965c"
   
   prod:
     workspace:
-      root_path: /Shared/cf_prod
+      root_path: /Shared/cf_app
       host: https://dbc-1e983d4b-9b08.cloud.databricks.com
+    mode: production
+    variables:
+      sql_warehouse_id: "prod環境のウェアハウスID（例: 1234567890abcdef）"

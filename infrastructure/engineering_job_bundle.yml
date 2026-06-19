@@ -1,5 +1,15 @@
 resources:
   jobs:
+    cf-engineering-init-job:
+      name: cf-engineering-init-job-${bundle.target}
+      tasks:
+        - task_key: create_stored_procedure
+          sql_task:
+            warehouse_id: ${var.sql_warehouse_id} 
+            file:
+              path: ${workspace.file_path}/src/01_engineering_chain/sql_procedures/sp_merge_upsert.dbquery.ipynb
+            parameters:
+              catalog_name: cf_engineering_${bundle.target}
     cf-engineering-job:
       name: cf-engineering-job-${bundle.target}
       trigger:
