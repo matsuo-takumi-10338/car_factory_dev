@@ -17,8 +17,9 @@ resources:
         - file:
             path: ${workspace.file_path}/src/02_mom_factory/03_silver_to_gold.py
       configuration:
-        root_path: ${workspace.file_path}/src/02_mom_factory
-        DATABRICKS_ENV: ${bundle.target}
+        mom_catalog_name: ${var.mom_catalog_name}
+        eng_catalog_name: ${var.eng_catalog_name}
+        workspace_files_path: ${workspace.file_path}
       permissions:
         - group_name: users
           level: CAN_VIEW

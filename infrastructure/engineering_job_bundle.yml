@@ -5,7 +5,7 @@ resources:
       tasks:
         - task_key: create_stored_procedure
           notebook_task:
-            notebook_path: ${workspace.file_path}/src/01_engineering_chain/sql_procedures/sp_merge_upsert.dbquery.ipynb
+            notebook_path: ${workspace.file_path}/src/01_engineering_chain/sql_procedures/sp_merge_upsert
             base_parameters:
               catalog_name: ${var.eng_catalog_name}
     cf-engineering-job:
@@ -13,7 +13,7 @@ resources:
       trigger:
         pause_status: UNPAUSED
         file_arrival:
-          url: s3://cf-engineering-bucket-dev/engineering_dev/raw/
+          url: s3://cf-engineering-bucket-dev/engineering_dev/raw/production_standard/
       tasks:
         - task_key: s3_to_master
           spark_python_task:
@@ -22,6 +22,21 @@ resources:
               - ${var.eng_catalog_name}
               - ${workspace.file_path}/files
           environment_key: Default
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "5"
+      permissions:
+        - group_name: users
+          level: CAN_VIEW
+    
+    cf-engineering-job-sp:
+      name: cf-engineering-job-sp-${bundle.target}
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: s3://cf-engineering-bucket-dev/engineering_dev/raw/production_standard_sp/
+      tasks:
         - task_key: s3_to_master_sp
           spark_python_task:
             python_file: ${workspace.file_path}/src/01_engineering_chain/production_standard_sp.py

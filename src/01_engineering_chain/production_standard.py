@@ -7,8 +7,11 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import DoubleType
 from delta.tables import DeltaTable
 
-env_params = EnvParams(domain="engineering", layer="production_standard")
-table_name = f"{env_params.catalog_name}.master.m_production_standard"
+eng_catalog_name = sys.argv[1]
+
+env_params = EnvParams(domain="engineering", layer="production_standard", catalog_name = eng_catalog_name)
+
+table_name = f"{eng_catalog_name}.master.m_production_standard"
 
 # 1. 読み込み側
 raw_df = (

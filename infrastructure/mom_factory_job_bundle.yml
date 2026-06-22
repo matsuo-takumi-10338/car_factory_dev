@@ -9,6 +9,7 @@ resources:
         - task_key: cf_mom_factory_pipeline
           pipeline_task:
             pipeline_id: ${resources.pipelines.cf_mom_factory_pipeline.id}
+          
       queue:
         enabled: true
       permissions:

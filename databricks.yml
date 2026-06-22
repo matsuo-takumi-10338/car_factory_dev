@@ -8,6 +8,9 @@ sync:
   paths:
     - .
 
+experimental:
+  skip_name_prefix_for_schema: true
+
 variables:
   sql_warehouse_id:
     description: SQL Warehouse ID
@@ -17,6 +20,9 @@ variables:
   mom_catalog_name:
     description: Unity Catalog Name for Mom Factory
     default: cf_mom_factory_${bundle.target}_${workspace.current_user.short_name}
+  unload_s3_path_mom:
+    description: S3 File Path to Unload for CSV 
+    default: s3://cf-mom-factory-bucket-${bundle.target}/mom_factory_${bundle.target}/unload
 
 targets:
   dev:

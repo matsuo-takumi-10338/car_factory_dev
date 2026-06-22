@@ -1,16 +1,19 @@
 import sys
-
-sys.path.insert(0, "/Workspace/Shared/cf_app/files")
-
 import dlt
 from pyspark.sql import functions as F
 from pyspark.sql.types import DoubleType, IntegerType, BooleanType
+
+files_path = spark.conf.get("workspace_files_path")
+mom_catalog_name = spark.conf.get("mom_catalog_name")
+
+sys.path.insert(0, files_path)
+
 from src.modules.env_params import EnvParams
 
-env_params = EnvParams(domain="mom_factory", layer="silver")
+env_params = EnvParams(domain="mom_factory", layer="silver", catalog_name = mom_catalog_name)
 
-brz_table_name = f"cf_mom_factory_{env_params.env}.bronze.brz_mom_factory"
-slv_table_name = f"cf_mom_factory_{env_params.env}.silver.slv_mom_factory"
+brz_table_name = f"{mom_catalog_name}.bronze.brz_mom_factory"
+slv_table_name = f"{mom_catalog_name}.silver.slv_mom_factory"
 
 
 # =====================================================================

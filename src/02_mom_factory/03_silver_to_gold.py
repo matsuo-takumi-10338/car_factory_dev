@@ -1,26 +1,19 @@
 import sys
-
-sys.path.insert(0, "/Workspace/Shared/cf_app/files")
-
 import dlt
 from pyspark.sql import functions as F
+
+files_path = spark.conf.get("workspace_files_path")
+mom_catalog_name = spark.conf.get("mom_catalog_name")
+eng_catalog_name = spark.conf.get("eng_catalog_name")
+
+sys.path.insert(0, files_path)
+
 from src.modules.env_params import EnvParams
 
-env_params = EnvParams(domain="mom_factory", layer="gold")
+env_params = EnvParams(domain="mom_factory", layer="gold", catalog_name = mom_catalog_name)
 
-slv_table_name = f"cf_mom_factory_{env_params.env}.silver.slv_mom_factory"
-gld_schema_name = f"cf_mom_factory_{env_params.env}.gold"
-
-# マスターテーブルの読み込み
-m_operator_resource = spark.read.table(
-    f"cf_mom_factory_{env_params.env}.master.m_operator_resource"
-)
-m_factory = spark.read.table(f"cf_mom_factory_{env_params.env}.master.m_factory")
-m_process = spark.read.table(f"cf_mom_factory_{env_params.env}.master.m_process")
-m_car_model = spark.read.table(f"cf_mom_factory_{env_params.env}.master.m_car_model")
-m_production_standard = spark.read.table(
-    f"cf_engineering_{env_params.env}.master.m_production_standard"
-)
+slv_table_name = f"{mom_catalog_name}.silver.slv_mom_factory"
+gld_schema_name = f"{mom_catalog_name}.gold"
 
 
 # =====================================================================
@@ -32,6 +25,11 @@ m_production_standard = spark.read.table(
     comment="ゴールド-BI表示用ライン別・車種別日次集計サマリー",
 )
 def gld_bi_mom_factory():
+    # マスターテーブルの読み込み
+    m_factory = spark.read.table(f"{mom_catalog_name}.master.m_factory")
+    m_process = spark.read.table(f"{mom_catalog_name}.master.m_process")
+    m_car_model = spark.read.table(f"{mom_catalog_name}.master.m_car_model")
+    
     slv_df = dlt.read(slv_table_name)
 
     summary_df = (
@@ -88,6 +86,17 @@ def gld_bi_mom_factory():
     table_properties={"pipelines.zorderColumns": "vin"},
 )
 def gld_api_vehicle_trace():
+    # マスターテーブルの読み込み
+    m_factory = spark.read.table(f"{mom_catalog_name}.master.m_factory")
+    m_process = spark.read.table(f"{mom_catalog_name}.master.m_process")
+    m_car_model = spark.read.table(f"{mom_catalog_name}.master.m_car_model")
+    m_operator_resource = spark.read.table(
+        f"{mom_catalog_name}.master.m_operator_resource"
+    )
+    m_production_standard = spark.read.table(
+        f"{eng_catalog_name}.master.m_production_standard"
+    )
+    
     slv_df = dlt.read(slv_table_name)
 
     joined_df = (
@@ -172,6 +181,17 @@ def gld_api_vehicle_trace():
     table_properties={"pipelines.zorderColumns": "operator_id"},
 )
 def gld_api_operator_status():
+    # マスターテーブルの読み込み
+    m_operator_resource = spark.read.table(
+        f"{mom_catalog_name}.master.m_operator_resource"
+    )
+    m_factory = spark.read.table(f"{mom_catalog_name}.master.m_factory")
+    m_process = spark.read.table(f"{mom_catalog_name}.master.m_process")
+    m_car_model = spark.read.table(f"{mom_catalog_name}.master.m_car_model")
+    m_production_standard = spark.read.table(
+        f"{eng_catalog_name}.master.m_production_standard"
+    )
+    
     slv_df = dlt.read(slv_table_name)
 
     joined_df = (
@@ -236,6 +256,10 @@ def gld_api_operator_status():
     table_properties={"pipelines.zorderColumns": "line_id,recipe_id"},
 )
 def gld_api_facility_maintenance():
+    # マスターテーブルの読み込み
+    m_factory = spark.read.table(f"{mom_catalog_name}.master.m_factory")
+    m_process = spark.read.table(f"{mom_catalog_name}.master.m_process")
+    
     slv_df = dlt.read(slv_table_name)
 
     joined_df = slv_df.join(

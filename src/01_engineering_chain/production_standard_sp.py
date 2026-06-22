@@ -7,8 +7,11 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import DoubleType
 from datetime import datetime
 
-env_params = EnvParams(domain="engineering", layer="production_standard_sp")
-table_name = f"{env_params.catalog_name}.master.m_sp_production_standard"
+eng_catalog_name = sys.argv[1]
+
+env_params = EnvParams(domain="engineering", layer="production_standard_sp", catalog_name = eng_catalog_name)
+
+table_name = f"{eng_catalog_name}.master.m_production_standard_sp"
 checkpoint_path = f"{env_params.get_path('checkpoint_location')}"
 
 # Auto Loaderによる読み込み
@@ -45,7 +48,7 @@ def _upsert_process(micro_batch_df, batch_id):
     view_name = f"temp_batch_data_{batch_id}"
     micro_batch_df.createOrReplaceTempView(view_name)
     spark.sql(
-        f"CALL {env_params.catalog_name}.master.sp_merge_upsert('{table_name}', '{view_name}')"
+        f"CALL {eng_catalog_name}.master.sp_merge_upsert('{table_name}', '{view_name}')"
     )
     spark.catalog.dropTempView(view_name)
 

@@ -1,13 +1,4 @@
 resources:
-  catalogs:
-    cf_mom_factory:
-      name: ${var.mom_catalog_name}
-      storage_root: s3://cf-mom-factory-bucket-dev/mom_factory_dev/database/${var.mom_catalog_name}
-
-    cf_engineering:
-      name: ${var.eng_catalog_name}
-      storage_root: s3://cf-engineering-bucket-dev/engineering_dev/database/${var.eng_catalog_name}
-
   schemas:
     bronze_schema_mom:
       name: bronze
@@ -24,3 +15,28 @@ resources:
     master_schema_eng:
       name: master
       catalog_name: ${var.eng_catalog_name}
+  volumes:
+    vol_bi_mom_factory:
+      name: vol_bi_mom_factory
+      catalog_name: ${var.mom_catalog_name}
+      schema_name: gold
+      volume_type: EXTERNAL
+      storage_location: ${var.unload_s3_path_mom}/vol_bi_mom_factory
+    vol_api_vehicle_trace:
+      name: vol_api_vehicle_trace
+      catalog_name: ${var.mom_catalog_name}
+      schema_name: gold
+      volume_type: EXTERNAL
+      storage_location: ${var.unload_s3_path_mom}/vol_api_vehicle_trace
+    vol_api_operator_status:
+      name: vol_api_operator_status
+      catalog_name: ${var.mom_catalog_name}
+      schema_name: gold
+      volume_type: EXTERNAL
+      storage_location: ${var.unload_s3_path_mom}/vol_api_operator_status
+    vol_api_facility_maintenance:
+      name: vol_api_facility_maintenance
+      catalog_name: ${var.mom_catalog_name}
+      schema_name: gold
+      volume_type: EXTERNAL
+      storage_location: ${var.unload_s3_path_mom}/vol_api_facility_maintenance

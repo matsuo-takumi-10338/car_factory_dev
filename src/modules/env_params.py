@@ -4,15 +4,14 @@ import sys
 
 
 class EnvParams:
-    def __init__(self, domain, layer):
+    def __init__(self, domain, layer, catalog_name):
         self.layer = layer
+        self.catalog_name = catalog_name
 
         if domain == "mom_factory":
             self.domain = "mom_factory"
         else:
             self.domain = "engineering"
-
-        self.catalog_name = sys.argv[1]
 
         scope_name = f"cf_{self.domain}_secrets"
         
