@@ -7,7 +7,7 @@ resources:
       channel: CURRENT
       photon: true
       serverless: true
-      catalog: cf_mom_factory_${bundle.target}
+      catalog: ${var.mom_catalog_name}
       schema: default
       libraries:
         - file:

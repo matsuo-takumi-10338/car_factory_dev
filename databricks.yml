@@ -32,6 +32,7 @@ targets:
     mode: development
     variables:
       sql_warehouse_id: 229175630612965c
+      unload_s3_path_mom: s3://cf-mom-factory-bucket-${bundle.target}/mom_factory_${bundle.target}/unload_test/${workspace.current_user.short_name}
   
   dev_shared:
     workspace:
