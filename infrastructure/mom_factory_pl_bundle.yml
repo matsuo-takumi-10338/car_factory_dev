@@ -16,6 +16,8 @@ resources:
             path: ${workspace.file_path}/src/02_mom_factory/02_bronze_to_silver.py
         - file:
             path: ${workspace.file_path}/src/02_mom_factory/03_silver_to_gold.py
+        - file:
+            path: ${workspace.file_path}/src/02_mom_factory/04_gold_to_s3.py
       configuration:
         mom_catalog_name: ${var.mom_catalog_name}
         eng_catalog_name: ${var.eng_catalog_name}
