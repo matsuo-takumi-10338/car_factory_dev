@@ -55,6 +55,7 @@ def gld_bi_mom_factory():
                 F.col("good_production_cnt") / F.col("total_production_cnt") * 100, 2
             ),
         )
+        .withColumn("_processed_timestamp", F.current_timestamp())
     )
 
     final_bi_df = (
@@ -166,6 +167,7 @@ def gld_api_vehicle_trace():
         "process_result_code",
         "defect_code",
         "4m_changed_flg",
+        "_processed_timestamp",
     )
 
     return final_df
@@ -241,6 +243,7 @@ def gld_api_operator_status():
         "cycle_time_sec",
         "target_cycle_time",
         "4m_changed_flg",
+        "_processed_timestamp",
     )
 
     return final_df
@@ -283,6 +286,7 @@ def gld_api_facility_maintenance():
         "process_result_code",
         "defect_code",
         "4m_changed_flg",
+        "_processed_timestamp",
     )
 
     return final_df

@@ -1,64 +1,71 @@
-import sys
+import glob
+import pytz
+from datetime import datetime, timedelta
+from pyspark.sql.functions import col, lit, to_date
 
-sys.path.insert(0, sys.argv[2])
+spark.conf.set("spark.sql.session.timeZone", "Asia/Tokyo")
 
-import sys
-from pyspark.sql import SparkSession
-
-spark = SparkSession.builder.getOrCreate()
-
-# ジョブの引数からカタログ名とワークスペースパスを取得
-catalog_name = sys.argv[1]
-dbutils = spark.getOrCreate()._jvm.com.databricks.service.DBUtils
-
-# アンロード対象のテーブルと、出力したい固定ファイル名のマッピング
-target_tables = {
-    "gld_bi_mom_factory": "bi_mom_factory.csv",
-    "gld_api_vehicle_trace": "api_vehicle_trace.csv",
-    "gld_api_operator_status": "api_operator_status.csv",
-    "gld_api_facility_maintenance": "api_facility_maintenance.csv",
-}
-
-# 最終的なS3の出力先ルート（環境に合わせて変更してください）
-# ※例として、バケット下の「unload」ディレクトリに出力
-final_s3_base_dir = f"s3://cf-mom-factory-bucket-dev/mom_factory_dev/unload/"
-
-
-def unload_table_to_single_csv(table_name, target_file):
-    full_table_name = f"`{catalog_name}`.`gold`.`{table_name}`"
-    final_s3_dir = f"{final_s3_base_dir}{table_name}/"
-    temp_s3_dir = f"{final_s3_dir}temp/"
-
-    print(f"🔄 アンロード開始: {full_table_name} -> {final_s3_dir}{target_file}")
-
-    # 1. 対象データを読み込む
-    df = spark.read.table(full_table_name)
-
-    # 2. データを1つにまとめて一時ディレクトリにCSV出力
-    (
-        df.coalesce(1)
-        .write.format("csv")
-        .option("header", "true")
-        .mode("overwrite")
-        .save(temp_s3_dir)
-    )
-
-    # 3. 拡張子が「part-」で始まる実際のCSVファイルを探す
-    temp_files = dbutils.fs.ls(temp_s3_dir)
-    part_file_path = [f.path for f in temp_files if f.name.startswith("part-")][0]
-
-    # 4. 指定の名前で最終目的地へ移動（リネーム）
-    final_destination = f"{final_s3_dir}{target_file}"
-    dbutils.fs.mv(part_file_path, final_destination)
-
-    # 5. 一時ディレクトリのクリーンアップ
-    dbutils.fs.rm(temp_s3_dir, recurse=True)
-    print(f"✅ アンロード完了: {target_file}")
-
-
-# 4つのテーブルを順次処理
-for table, file_name in target_tables.items():
+# ==========================================
+# 1. Spark処理専用関数
+# ==========================================
+def execute_yesterday_export(schema_path, table_name, yesterday_str, temp_dir):
+    df_all = spark.table(f"{schema_path}.{table_name}")
+    target_date_column = "_processed_timestamp" 
+    df_delta_lazy = df_all.filter(to_date(col(target_date_column)) == lit(yesterday_str)).coalesce(1)
+    
     try:
-        unload_table_to_single_csv(table, file_name)
+        row_count = df_delta_lazy.count()
+        if row_count > 0:
+            (df_delta_lazy
+             .write
+             .mode("overwrite")
+             .option("header", "true")
+             .csv(temp_dir))
+        return row_count
     except Exception as e:
-        print(f"❌ {table} のアンロード中にエラーが発生しました: {e}")
+        raise RuntimeError(f"テーブル [{table_name}] の処理中に致命的なエラーが発生しました。理由: {e}") from e
+
+
+mom_catalog_name = spark.conf.get("mom_catalog_name")
+schema_path = f"{mom_catalog_name}.gold"
+volume_base_path = f"/Volumes/{mom_catalog_name}/gold/"
+
+jst_tz = pytz.timezone('Asia/Tokyo')
+current_execution_time = datetime.now(jst_tz)
+timestamp = current_execution_time.strftime("%Y%m%d_%H%M%S")
+
+yesterday = current_execution_time - timedelta(days=1)
+yesterday_str = yesterday.strftime("%Y-%m-%d")
+
+tables_df = spark.sql("SHOW TABLES IN " + schema_path)
+table_list = [row.tableName for row in tables_df.collect() if not row.isTemporary]
+
+# ==========================================
+# 2. ループ処理による一括CSV出力（前日分・日次抽出）
+# ==========================================
+for table_name in table_list:
+    
+    table_basename = re.sub(r"^gld_", "", table_name)
+    target_file_name = f"{mom_catalog_name}_{table_basename}_{timestamp}.csv"
+
+    table_output_dir = f"{volume_base_path}vol_{table_basename}"
+    temp_dir = f"{table_output_dir}/temp_{table_name}"
+    
+    row_count = execute_yesterday_export(schema_path, table_name, yesterday_str, temp_dir)
+    if row_count == 0:
+        dbutils.fs.rm(temp_dir, recurse=True)
+        continue
+        
+    try:
+        csv_files = glob.glob(f"{temp_dir}/part-*.csv")
+        if csv_files:
+            spark_generated_csv = csv_files[0]
+            final_file_path = f"{table_output_dir}/{target_file_name}"
+            
+            dbutils.fs.mv(spark_generated_csv, final_file_path)
+            
+    except Exception as e:
+        raise RuntimeError(f"テーブル [{table_name}] のファイル移動中にエラーが発生しました。理由: {e}") from e
+        
+    finally:
+        dbutils.fs.rm(temp_dir, recurse=True)
