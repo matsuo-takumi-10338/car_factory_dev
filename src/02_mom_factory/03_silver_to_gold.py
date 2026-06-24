@@ -48,6 +48,7 @@ def gld_bi_mom_factory():
             F.sum(F.when(F.col("4m_changed_flg"), 1).otherwise(0)).alias(
                 "4m_change_event_cnt"
             ),
+            F.max(F.col("_processed_timestamp")).alias("_processed_timestamp"),
         )
         .withColumn(
             "yield_rate",
@@ -55,7 +56,6 @@ def gld_bi_mom_factory():
                 F.col("good_production_cnt") / F.col("total_production_cnt") * 100, 2
             ),
         )
-        .withColumn("_processed_timestamp", F.current_timestamp())
     )
 
     final_bi_df = (
