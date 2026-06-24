@@ -10,7 +10,9 @@ sys.path.insert(0, files_path)
 from src.modules.env_params import EnvParams
 
 
-env_params = EnvParams(domain="mom_factory", layer="bronze", catalog_name = mom_catalog_name)
+env_params = EnvParams(
+    domain="mom_factory", layer="bronze", catalog_name=mom_catalog_name
+)
 brz_table_name = f"{mom_catalog_name}.bronze.brz_mom_factory"
 
 
