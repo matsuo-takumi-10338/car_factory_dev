@@ -16,33 +16,33 @@ variables:
     description: SQL Warehouse ID
   eng_catalog_name:
     description: Unity Catalog Name for Engineering
-    default: cf_engineering_${bundle.target}_${workspace.current_user.short_name}
+    default: cf_engineering_${bundle.target}
   mom_catalog_name:
     description: Unity Catalog Name for Mom Factory
-    default: cf_mom_factory_${bundle.target}_${workspace.current_user.short_name}
+    default: cf_mom_factory_${bundle.target}
   unload_s3_path_mom:
     description: S3 File Path to Unload for CSV 
     default: s3://cf-mom-factory-bucket-${bundle.target}/mom_factory_${bundle.target}/unload
 
 targets:
-  dev:
+  dev-personal:
     default: true
     workspace:
       host: https://dbc-599d6b62-77ee.cloud.databricks.com
     mode: development
     variables:
       sql_warehouse_id: 229175630612965c
-      unload_s3_path_mom: s3://cf-mom-factory-bucket-${bundle.target}/mom_factory_${bundle.target}/unload_test/${workspace.current_user.short_name}
+      mom_catalog_name: cf_mom_factory_dev_${workspace.current_user.short_name}
+      eng_catalog_name: cf_engineering_dev_${workspace.current_user.short_name}
+      unload_s3_path_mom: s3://cf-mom-factory-bucket-dev/mom_factory_dev/unload_test/${workspace.current_user.short_name}
   
-  dev_shared:
+  dev:
     workspace:
       root_path: /Shared/cf_app
       host: https://dbc-599d6b62-77ee.cloud.databricks.com
     mode: production
     variables:
       sql_warehouse_id: 229175630612965c
-      mom_catalog_name: cf_mom_factory_dev
-      eng_catalog_name: cf_engineering_dev
   
   prod:
     workspace:
@@ -51,5 +51,3 @@ targets:
     mode: production
     variables:
       sql_warehouse_id: xxxxxxxxxxxxxxxxxxx
-      mom_catalog_name: cf_mom_factory_prod
-      eng_catalog_name: cf_engineering_prod

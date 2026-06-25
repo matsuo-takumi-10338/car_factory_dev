@@ -77,6 +77,6 @@ dlt.create_auto_cdc_flow(
     target=slv_table_name,
     source="v_slv_mom_factory_cleaned",
     keys=["log_id"],
-    sequence_by=F.struct("timestamp", "sequence_no"),
+    sequence_by="sequence_no",
     stored_as_scd_type=1,
 )
