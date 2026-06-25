@@ -20,10 +20,17 @@ resources:
           level: CAN_VIEW
     cf_mom_factory_check_file_arrival_job:
       name: cf-mom-factory-check-file-arrival-job-${bundle.target}
+      schedule:
+        quartz_cron_expression: "0 0 9 * * ?"
+        timezone_id: "Asia/Tokyo"
+        pause_status: "PAUSED"
       tasks:
         - task_key: check_file_arrival
           spark_python_task:
             python_file: ${workspace.file_path}/src/02_mom_factory/jobs/check_file_arrival.py
+            parameters:
+              - ${var.mom_catalog_name}
+          disable_auto_optimization: true
           max_retries: 0
           email_notifications:
             on_failure:

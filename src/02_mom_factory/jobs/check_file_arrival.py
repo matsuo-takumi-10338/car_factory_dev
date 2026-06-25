@@ -1,14 +1,16 @@
 from datetime import datetime, timezone, timedelta
 import pytz
+import sys
 
-mom_catalog_name = spark.conf.get("mom_catalog_name")
+mom_catalog_name = sys.argv[1]
 
 brz_table_name = f"{mom_catalog_name}.bronze.brz_mom_factory"
 
 df = spark.sql(f"""
-    SELECT MAX(timestamp) AS max_time 
+    SELECT MAX(to_timestamp(timestamp, 'yyyy/M/d HH:mm')) AS max_time 
     FROM {brz_table_name}
 """)
+
 latest_time = df.collect()[0]["max_time"]
 
 
