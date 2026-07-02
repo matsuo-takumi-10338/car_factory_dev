@@ -5,7 +5,6 @@ from pyspark.sql import functions as F
 files_path = spark.conf.get("workspace_files_path")
 mom_catalog_name = spark.conf.get("mom_catalog_name")
 eng_catalog_name = spark.conf.get("eng_catalog_name")
-target_env = spark.conf.get("myapp.environment", "dev")
 
 sys.path.insert(0, files_path)
 
@@ -14,6 +13,7 @@ from src.modules.enums import Status, ErrorSeverity
 
 env_params = EnvParams(domain="mom_factory", layer="gold", catalog_name=mom_catalog_name)
 
+target_env = env_params.env
 slv_table_name = f"{mom_catalog_name}.silver.slv_mom_factory"
 gld_schema_name = f"{mom_catalog_name}.gold"
 gld_qt_table_name = f"{gld_schema_name}.gld_qt_mom_factory"
