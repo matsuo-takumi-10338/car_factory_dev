@@ -6,8 +6,8 @@ import importlib
 
 s3_to_bronze = importlib.import_module("src.02_mom_factory.01_s3_to_bronze")
 
-TEST_S3_SOURCE_PATH = "s3://cf-mom-factory-bucket-dev/mom_factory_dev/raw_test/01_s3_to_bronze"
-TEST_SCHEMA_LOCATION = "s3://cf-mom-factory-bucket-dev/mom_factory_dev/schema_test/01_s3_to_bronze"
+TEST_S3_SOURCE_PATH = "s3://cf-mom-factory-bucket-dev/mom_factory_dev/tests/raw/01_s3_to_bronze"
+TEST_SCHEMA_LOCATION = "s3://cf-mom-factory-bucket-dev/mom_factory_dev/tests/checkpoints/01_s3_to_bronze"
 TEST_BRZ_TABLE       = "cf_mom_factory_dev_matsuot.bronze.brz_mom_factory_test"
 
 # =====================================================================
@@ -27,7 +27,7 @@ F03-L0001,VIN-F03-00001,2026/6/26 10:00,F03,LINE-A,P05,BZ4X-EV,1,60.0,NONE,OP-10
 F03-L0002,VIN-F03-00002,2026/6/26 10:05,F03,LINE-A,P05,BZ4X-EV,1,55.5,NONE,OP-106,LOT-BAT-101,RCP-01,FALSE,2"""
     
     file_name = "test_source_vehicle_logs.csv"
-    dbutils.fs.put(f"{TEST_S3_SOURCE_PATH}{file_name}", csv_content.strip(), overwrite=True)
+    dbutils.fs.put(f"{TEST_S3_SOURCE_PATH}/{file_name}", csv_content.strip(), overwrite=True)
     
     # 3. 本番と同じAuto Loaderパイプラインを実行して、テスト用テーブルにデータを書き込む
     raw_stream_df = (
